@@ -2,10 +2,12 @@ package com.alterdata.serratec.pack3.service;
 
 import java.util.Collections;
 import java.util.List;
-
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+
 import com.alterdata.serratec.pack3.domain.Colaborador;
 import com.alterdata.serratec.pack3.domain.Time;
 import com.alterdata.serratec.pack3.dto.LoginRequest;
@@ -110,6 +113,13 @@ public class ColaboradorService {
 		Optional<Colaborador> usuario = colaboradorRepository.findByLogin(loginRequest.getLogin());
 
 		return new LoginResponse(token, usuario.get());
+	}
+
+	@Transactional
+	@Scheduled(cron = "@monthly")
+	public void deleteHoras() {
+		colaboradorRepository.deleteHoras();
+
 	}
 
 }

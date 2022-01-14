@@ -18,62 +18,48 @@ import com.alterdata.serratec.pack3.security.CustomUserDetailsService;
 import com.alterdata.serratec.pack3.security.JWTAuthenticationFilter;
 
 @Configuration
-@EnableWebSecurity 
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	private CustomUserDetailsService customUserDetailsService;
-	
+
 	@Autowired
 	private JWTAuthenticationFilter jwtAuthenticationFilter;
-	
-	
+
 	@Override
-    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder
-                .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEnconder());
-    }
-	
-		
+	public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+		authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEnconder());
+	}
+
 	@Bean
 	public PasswordEncoder passwordEnconder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		
-		http
-			.cors().and().csrf().disable()
-			.exceptionHandling()
-			.and()
-			.sessionManagement()
-			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and()
-			.authorizeRequests()
-			
-					 			
-			.antMatchers("/login") 
-			.permitAll() 
-		
 
-			.antMatchers(HttpMethod.POST, "/colaboradores")
-			.permitAll() 
-			
-			
-		//.anyRequest().authenticated();
+		http.cors().and().csrf().disable().exceptionHandling().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
 
-		.anyRequest().permitAll(); 
-			
+				.antMatchers("/login").permitAll()
+
+				.antMatchers(HttpMethod.POST, "/colaboradores").permitAll()
+				
+				.antMatchers(HttpMethod.POST, "/times").permitAll()
+
+				//.anyRequest().authenticated();
+
+				.anyRequest().permitAll();
+
 		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-			
-	}	
-	
-	
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+
+	}
+
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		return super.authenticationManagerBean();
+	}
 }

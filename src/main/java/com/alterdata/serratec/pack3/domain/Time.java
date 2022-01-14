@@ -2,6 +2,7 @@ package com.alterdata.serratec.pack3.domain;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +26,7 @@ public class Time {
 	private Long idTime;
 	
 	@ApiModelProperty(value = "Nome do time")
+	@Column(name = "nome_time", unique = true)
 	private String nomeTime;
 	
 	@ApiModelProperty(value = "Quantidade de integrantes do time")

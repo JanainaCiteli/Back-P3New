@@ -43,7 +43,7 @@ public class CompensacaoService {
 
 	public Compensacao inserirCompensacao(Compensacao compensacao) {
 
-		LocalDate diaSemana = LocalDate.now();
+		LocalDate diaSemana = compensacao.getDataCompensacao();
 		DayOfWeek dia = diaSemana.getDayOfWeek();
 		// System.out.println(diaSemana.getDayOfWeek());
 

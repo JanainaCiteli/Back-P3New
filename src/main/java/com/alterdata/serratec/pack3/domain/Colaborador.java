@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -39,15 +40,15 @@ public class Colaborador implements UserDetails {
 	private Long idColaborador;
 
 	@ApiModelProperty(value = "Nome do colaborador")
-	@Column(name = "nome_colaborador", length = 50)
+	@Column(name = "nome_colaborador")
 	private String nomeColaborador;
 
 	@ApiModelProperty(value = "Cargo do colaborador")
-	@Column(name = "cargo", length = 50)
+	@Column(name = "cargo")
 	private String cargo;
 
 	@ApiModelProperty(value = "Login do colaborador", required = true)
-	@Column(name = "login", length = 30)
+	@Column(name = "login", unique = true)
 	private String login;
 
 	@ApiModelProperty(value = "Senha do colaborador", required = true)
@@ -56,12 +57,16 @@ public class Colaborador implements UserDetails {
 
 	@ApiModelProperty(value = "Data do início do contrato do colaborador", required = true)
 	@Column(name = "inicio_contrato")
-	//@DateTimeFormat(pattern = "dd/MM/yyyy")
+	//@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate inicioContrato;
-	
+
 	@ApiModelProperty(value = "Horas disponíveis para uso do colaborador")
 	@Column(name = "hora_disponivel")
 	private Double horaDisponivel = 0.0;
+
+	@ApiModelProperty(value = "Foto de perfil do colaborador")
+	@Column(name = "foto")
+	private byte[] foto;
 
 	// Status
 	@OneToOne
@@ -75,11 +80,11 @@ public class Colaborador implements UserDetails {
 	@JsonIgnoreProperties("colaboradores")
 	@JoinColumn(name = "id_time")
 	private Time time;
-	
-	//Compensação 
+
+	// Compensação
 	@OneToMany(mappedBy = "colaborador")
-	private List <Compensacao> compensacoes;
-	
+	private List<Compensacao> compensacoes;
+
 	public Colaborador() {
 		super();
 	}
@@ -163,9 +168,21 @@ public class Colaborador implements UserDetails {
 	public void setCompensacoes(List<Compensacao> compensacoes) {
 		this.compensacoes = compensacoes;
 	}
-	
-	
+
+	public byte[] getFoto() {
+		return foto;
+	}
+
+	public void setFoto(byte[] foto) {
+		this.foto = foto;
+	}
+
+	public void setHoraDisponivel(Double horaDisponivel) {
+		this.horaDisponivel = horaDisponivel;
+	}
+
 	@Override
+	@JsonIgnore
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
 		return null;
@@ -208,8 +225,5 @@ public class Colaborador implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-	
-	
 
-	
 }
