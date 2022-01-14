@@ -10,7 +10,7 @@ package com.alterdata.serratec.pack3.config;
 		@Override
 		public void addCorsMappings(CorsRegistry registry) {
 			registry.addMapping("/**")
-			.allowedHeaders("*")
+			.allowedHeaders("http://localhost:3000/")
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "TRACE", "CONNECT");
 		}
 		
